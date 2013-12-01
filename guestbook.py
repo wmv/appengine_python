@@ -44,31 +44,30 @@ class Greeting(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class MainPage(webapp2.RequestHandler):
-	def get(self):
-		guestbook_name = self.request.get('guestbook_name',
-						 DEFAULT_GUESTBOOK_NAME)
-		
-		greetings_query = Greeting.query(
-			ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
-		greetings = greetings_query.fetch(10)
 
-		if users.get_current_user():
-			url = users.create_logout_url(self.request.uri)
-			url_linktext = 'Logout'
-		else:
-			url = users.create_login_url(self.request.uri)
-			url_linktext = 'Login'
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        greetings_query = Greeting.query(
+            ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings = greetings_query.fetch(10)
 
-		template_values = {
-			'greetings': greetings,
-			'guestbook_name': urllib.quote_plus(guestbook_name),
-			'url': url,
-			'url_linktext': url_linktext,
-		}
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
 
-		template = JINJA_ENVIRONMENT.get_template('index.html')
+        template_values = {
+            'greetings': greetings,
+            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
-
 class Guestbook(webapp2.RequestHandler):
 	def post(self):
 		guestbook_name = self.request.get('guestbook_name',
