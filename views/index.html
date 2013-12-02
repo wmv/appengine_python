@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+ <head>
+
+    <link type="text/css" rel="stylesheet" href="/stylesheets/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+<body>
+	<form action="/newpost" method="post">
+		<div><textarea class="form-control" name="content" rows="3" cols="60"></textarea></div>
+		<div class="center"><input class="center btn btn-danger btn-large" type="submit" value="Send Message"></div>
+	</form>
+	<div class="list-group">
+	{% for greeting in greetings %}
+		{% if (greeting.author) and (greeting.author.nickname() == currentauthor) %}
+			<div class="list-group-item active">
+		{% else %}
+			<div class="list-group-item">
+		{% endif %}	
+			<h4 class="list-group-item-heading">
+			{% if greeting.author %}
+				{% if greeting.author.nickname() == currentauthor %}
+					<p>You Wrote:</p>
+				{% else %}
+					<b>{{ greeting.author.nickname() }}</b> wrote:
+				{% endif %}
+			{% else %}
+				Anonymous wrote:</h4>
+			{% endif %}
+			<blockquote class="list-group-item-text">{{ greeting.content }}</blockquote>
+		</div>
+		<form action="/delete" method="post">
+			<input type="hidden" value="{{ greeting.key.id() }}" name="id">
+            <br>
+            <input type=submit value="Delete Post"/>
+        </form>
+	{% endfor %}
+</div>
+
+	<a href="{{ url|safe }}">{{ url_linktext }}</a>
+
+  </body>
+</html>
+{% endautoescape %}

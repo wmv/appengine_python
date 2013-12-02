@@ -1,0 +1,11 @@
+body {
+  font-family: Verdana, Helvetica, sans-serif;
+  background-color: #DDDDDD;
+}
+
+.center
+{
+margin-left:auto;
+margin-right:auto;
+width:100%;
+}
